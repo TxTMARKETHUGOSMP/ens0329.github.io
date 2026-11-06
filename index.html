@@ -1,21 +1,1093 @@
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>V7KXL Sweat Pack 64x</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#090a0c">
+  <title>TxTMarket — Minecraft Community</title>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; background: #f0f0f0; }
-    .container { max-width: 600px; margin: 50px auto; padding: 20px; background: #fff; border-radius: 10px; }
-    a { display: inline-block; padding: 15px 30px; background: #4CAF50; color: #fff; text-decoration: none; border-radius: 5px; font-weight: bold; }
-    a:hover { background: #45a049; }
+    :root {
+      --bg: #090a0c;
+      --panel: #111316;
+      --panel2: #171a1e;
+      --line: rgba(225,230,235,.22);
+      --gold: #f0b933;
+      --gold-bright: #ffdc78;
+      --silver: #e7e9ec;
+      --muted: #aeb3ba;
+      --max: 1440px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: #f3f4f6;
+      background:
+        radial-gradient(ellipse at 50% -20%, rgba(190,150,65,.12), transparent 45%),
+        repeating-linear-gradient(135deg, rgba(255,255,255,.018) 0 1px, transparent 1px 5px),
+        linear-gradient(145deg, #17191c 0%, #090a0c 52%, #111316 100%);
+      font-family: Inter, system-ui, sans-serif;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+      opacity: .17;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.3'/%3E%3C/svg%3E");
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+    .shell { width: min(var(--max), calc(100% - 60px)); margin: 0 auto; }
+
+    /* NAVIGATION */
+    .topbar {
+      height: 86px;
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: rgba(8,9,11,.91);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(238,187,67,.45);
+      box-shadow: 0 8px 30px rgba(0,0,0,.35);
+    }
+
+    .nav {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      flex: 0 0 auto;
+      font-size: clamp(24px,2.8vw,36px);
+      font-weight: 950;
+      font-style: italic;
+      letter-spacing: -.065em;
+      white-space: nowrap;
+      background: linear-gradient(110deg,#f8d47b,#f0f1f2 38%,#aeb4bb);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(12px,3vw,48px);
+      margin: 0 auto;
+    }
+
+    .nav-btn {
+      position: relative;
+      border: 0;
+      background: transparent;
+      color: #c5c8cc;
+      padding: 31px 4px 27px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+      transition: color .2s ease;
+    }
+
+    .nav-btn::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 17px;
+      height: 3px;
+      border-radius: 99px;
+      background: linear-gradient(90deg,#fff,#d8dce0);
+      transform: scaleX(0);
+      transition: transform .2s ease;
+      box-shadow: 0 0 12px rgba(255,255,255,.45);
+    }
+
+    .nav-btn:hover,
+    .nav-btn.active { color: #fff; }
+
+    .nav-btn.active::after { transform: scaleX(1); }
+
+    .header-emblem {
+      width: 94px;
+      height: 94px;
+      flex: 0 0 94px;
+      position: relative;
+      z-index: 2;
+      margin: 15px 4px -22px 5px;
+      border-radius: 50%;
+      filter: drop-shadow(0 0 15px rgba(255,183,36,.52));
+      transition: transform .25s ease;
+    }
+
+    .header-emblem:hover { transform: rotate(5deg) scale(1.04); }
+    .header-emblem svg { display: block; width: 100%; height: 100%; }
+
+    .menu-toggle {
+      display: none;
+      margin-left: auto;
+      border: 1px solid var(--line);
+      color: white;
+      background: #17191c;
+      border-radius: 10px;
+      padding: 9px 12px;
+    }
+
+    main { padding: 24px 0 38px; }
+
+    .page {
+      display: none;
+      animation: pageIn .32s ease both;
+    }
+
+    .page.active { display: block; }
+
+    @keyframes pageIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* HERO */
+    .hero {
+      min-height: 300px;
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      display: flex;
+      align-items: center;
+      padding: 48px 44px;
+      border: 1px solid rgba(225,230,235,.32);
+      border-radius: 25px;
+      background:
+        linear-gradient(90deg,rgba(5,6,8,.96),rgba(7,8,10,.91) 43%,rgba(7,8,10,.45)),
+        repeating-linear-gradient(132deg,#282c30 0 2px,#171a1e 2px 7px,#22262b 7px 9px);
+      box-shadow: 0 22px 65px rgba(0,0,0,.43);
+    }
+
+    .hero::before {
+      content: "TXT";
+      position: absolute;
+      z-index: -1;
+      right: 8%;
+      top: 50%;
+      transform: translateY(-53%) skew(-9deg);
+      color: rgba(204,210,216,.105);
+      font-size: clamp(135px,23vw,330px);
+      line-height: .8;
+      font-weight: 1000;
+      letter-spacing: -.11em;
+      text-shadow: 0 3px 0 rgba(255,255,255,.08);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      inset: 0;
+      background:
+        linear-gradient(115deg,transparent 52%,rgba(255,255,255,.07) 52.2%,transparent 53%),
+        linear-gradient(130deg,transparent 65%,rgba(255,255,255,.09) 65.2%,transparent 65.7%);
+      pointer-events: none;
+    }
+
+    .hero-lightning {
+      position: absolute;
+      right: -12px;
+      top: -52px;
+      height: 390px;
+      width: 42%;
+      min-width: 330px;
+      opacity: .96;
+      z-index: -1;
+      pointer-events: none;
+      filter: drop-shadow(0 0 8px #f5ba35) drop-shadow(0 0 18px rgba(255,183,35,.5));
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 690px;
+    }
+
+    .eyebrow {
+      color: #c1c6cd;
+      text-transform: uppercase;
+      letter-spacing: .2em;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .hero h1 {
+      margin: 17px 0 15px;
+      font-size: clamp(54px,8.4vw,112px);
+      line-height: .9;
+      letter-spacing: -.075em;
+      font-weight: 1000;
+      font-style: italic;
+      white-space: nowrap;
+    }
+
+    .hero h1 .txt {
+      color: #f4f5f6;
+      text-shadow: 0 2px 18px rgba(255,255,255,.14);
+    }
+
+    .hero h1 .market {
+      background: linear-gradient(180deg,#ffe59b,#e9ae22 70%,#a76a08);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .lead {
+      max-width: 630px;
+      margin: 0;
+      color: #c1c4c8;
+      line-height: 1.55;
+      font-size: 18px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-top: 27px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 43px;
+      padding: 11px 23px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.45);
+      font-size: 14px;
+      font-weight: 800;
+      transition: transform .2s, box-shadow .2s;
+      cursor: pointer;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+
+    .btn-primary {
+      color: #111214;
+      border-color: #f4f4f4;
+      background: linear-gradient(145deg,#fff,#aeb2b7);
+      box-shadow: inset 0 1px 0 #fff, 0 0 16px rgba(255,255,255,.12);
+    }
+
+    .btn-ghost {
+      color: #f0f1f2;
+      background: rgba(0,0,0,.32);
+      border-color: rgba(238,238,238,.62);
+    }
+
+    .btn-ghost:hover { border-color: var(--gold-bright); }
+
+    /* KARTEN */
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 20px;
+      margin: 32px 3px 17px;
+    }
+
+    .section-head h2, .page-title {
+      margin: 0;
+      font-size: clamp(28px,3.6vw,38px);
+      font-weight: 900;
+      letter-spacing: -.055em;
+      font-style: italic;
+    }
+
+    .section-head p {
+      margin: 5px 0 0;
+      color: #b8bdc3;
+      font-size: 14px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3,minmax(0,1fr));
+      gap: 17px;
+    }
+
+    .card {
+      min-width: 0;
+      overflow: hidden;
+      border: 1px solid rgba(220,225,230,.29);
+      border-radius: 17px;
+      background: linear-gradient(145deg,#17191c,#0d0f11 75%);
+      box-shadow: 0 10px 28px rgba(0,0,0,.34);
+      transition: transform .22s,border-color .22s;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(241,190,66,.62);
+    }
+
+    .card-art {
+      height: 132px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      padding: 18px;
+      background:
+        linear-gradient(0deg,rgba(8,9,11,.76),rgba(8,9,11,.12)),
+        repeating-linear-gradient(132deg,#55595d 0 2px,#262a2f 2px 8px,#3c4146 8px 11px,#1d2024 11px 15px);
+      border-bottom: 1px solid rgba(255,255,255,.13);
+    }
+
+    .card-art::before {
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(130deg,transparent 30%,rgba(255,255,255,.18) 30.4%,transparent 31.3%,transparent 74%,rgba(244,183,51,.38) 74.3%,transparent 74.8%);
+    }
+
+    .card-art::after {
+      content:"";
+      position:absolute;
+      right:-22px;
+      top:-50px;
+      width:165px;
+      height:165px;
+      border:1px solid rgba(255,255,255,.2);
+      transform:rotate(38deg);
+      box-shadow:0 0 0 9px rgba(255,255,255,.035),0 0 0 22px rgba(255,255,255,.025);
+    }
+
+    .card-art span {
+      position: relative;
+      z-index: 1;
+      color: rgba(239,241,243,.78);
+      font-size: clamp(30px,4vw,53px);
+      font-weight: 1000;
+      font-style: italic;
+      letter-spacing: -.07em;
+      text-shadow: 0 3px 11px #000;
+      transform: skew(-8deg);
+    }
+
+    .card-body { padding: 14px 20px 17px; }
+
+    .tag {
+      display: inline-block;
+      padding: 4px 9px;
+      color: #f1f2f3;
+      background: rgba(226,229,232,.17);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .card h3 { margin: 8px 0 5px; font-size: 18px; }
+    .card p { margin: 0 0 13px; color: #b4b8bd; font-size: 14px; line-height: 1.45; }
+
+    .card-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .small-link, .text-link {
+      color: #f0f1f2;
+      font-size: 13px;
+      font-weight: 750;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .text-link { border: 0; background: none; cursor: pointer; padding: 0; }
+    .small-link:hover, .text-link:hover { color: var(--gold-bright); }
+
+    /* WEITERE TABS */
+    .page-intro { padding: 31px 2px 23px; }
+    .page-intro .eyebrow { margin-bottom: 12px; }
+    .page-title { font-size: clamp(36px,5vw,54px); }
+    .page-title .gold-dot { color: var(--gold); }
+
+    .page-intro p {
+      color: #b8bdc3;
+      max-width: 680px;
+      line-height: 1.65;
+      font-size: 14px;
+    }
+
+    .empty-note {
+      grid-column: 1/-1;
+      padding: 23px;
+      color: #b8bdc3;
+      border: 1px dashed rgba(240,190,70,.35);
+      border-radius: 15px;
+      background: rgba(255,255,255,.025);
+      font-size: 13px;
+    }
+
+    .social-grid {
+      display: grid;
+      grid-template-columns: repeat(2,minmax(0,1fr));
+      gap: 16px;
+    }
+
+    .social-card {
+      padding: 22px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .social-icon {
+      width: 48px;
+      height: 48px;
+      flex: 0 0 48px;
+      display:grid;
+      place-items:center;
+      border-radius: 13px;
+      background: linear-gradient(145deg,#f8d87e,#b87c12);
+      color:#151515;
+      font-size:18px;
+      font-weight:950;
+    }
+
+    .social-card h3 { margin: 0 0 5px; }
+    .social-card p { margin: 0; color: var(--muted); font-size: 12px; }
+    .social-card .btn { margin-left: auto; white-space: nowrap; }
+
+    /* DISCORD */
+    .discord-panel {
+      min-height: 190px;
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      border: 1px solid rgba(232,188,77,.37);
+      border-radius: 19px;
+      padding: 25px 34px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 25px;
+      background: linear-gradient(100deg,rgba(10,11,13,.97),rgba(12,13,15,.88) 55%,rgba(10,11,13,.55)),
+        repeating-linear-gradient(135deg,#30353a 0 2px,#14171a 2px 8px,#24292e 8px 11px);
+      box-shadow: 0 12px 32px rgba(0,0,0,.3);
+    }
+
+    .discord-panel::after {
+      content:"";
+      position:absolute;
+      inset:0;
+      z-index:-1;
+      opacity:.8;
+      background:linear-gradient(130deg,transparent 52%,rgba(242,184,53,.16) 52.2%,transparent 53%),linear-gradient(110deg,transparent 72%,rgba(255,204,85,.1) 72.3%,transparent 73%);
+    }
+
+    .discord-copy { position: relative; z-index: 2; }
+
+    .discord-panel h2 {
+      margin: 10px 0 7px;
+      font-size: clamp(28px,4vw,42px);
+      letter-spacing: -.055em;
+      font-style: italic;
+    }
+
+    .discord-panel p {
+      max-width: 580px;
+      color: #c0c4c9;
+      font-size: 14px;
+      line-height: 1.5;
+      margin: 0 0 17px;
+    }
+
+    .discord-symbol {
+      position: relative;
+      z-index: 1;
+      margin-right: 6%;
+      color: rgba(220,224,228,.38);
+      font-size: clamp(65px,10vw,115px);
+      font-weight: 1000;
+      letter-spacing: -.1em;
+      transform: rotate(-8deg);
+      text-shadow: 0 0 25px rgba(255,255,255,.12);
+    }
+
+    .discord-lightning {
+      position:absolute;
+      right:-10px;
+      top:-55px;
+      height:300px;
+      width:43%;
+      z-index:0;
+      opacity:.9;
+      filter:drop-shadow(0 0 8px #efb632) drop-shadow(0 0 17px rgba(255,181,30,.45));
+    }
+
+    .home-discord { margin-top: 17px; }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid rgba(237,184,53,.55);
+      padding: 18px 0 21px;
+      color: #b8bdc3;
+      font-size: 12px;
+      background: rgba(0,0,0,.2);
+    }
+
+    .footer-inner {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:15px;
+    }
+
+    .footer-line {
+      flex:1;
+      height:1px;
+      background:linear-gradient(90deg,rgba(255,255,255,.3),rgba(255,255,255,.08));
+    }
+
+    .footer-mark { color: var(--gold); letter-spacing: .12em; font-weight: 900; }
+
+    /* HANDY */
+    @media (max-width: 900px) {
+      .shell { width: min(var(--max), calc(100% - 36px)); }
+      .nav { gap: 13px; }
+      .nav-links { gap: 16px; }
+      .nav-btn { font-size: 13px; }
+      .header-emblem { width: 76px; height: 76px; flex-basis: 76px; }
+      .hero { min-height: 285px; }
+      .lead { font-size: 16px; }
+    }
+
+    @media (max-width: 680px) {
+      .topbar { height: 72px; }
+      .shell { width: calc(100% - 26px); }
+      .nav { gap: 10px; }
+      .brand { font-size: 27px; }
+      .menu-toggle { display: block; }
+      .header-emblem { width: 62px; height: 62px; flex-basis: 62px; margin: 5px 0 0 0; }
+      .nav-links {
+        display:none;
+        position:absolute;
+        top:72px;
+        left:0;
+        right:0;
+        padding:10px 13px 14px;
+        background:rgba(8,9,11,.98);
+        border-bottom:1px solid rgba(237,184,53,.4);
+        grid-template-columns:repeat(3,1fr);
+        gap:4px;
+      }
+      .nav-links.open { display:grid; }
+      .nav-btn { padding:12px 5px; font-size:12px; }
+      .nav-btn::after { bottom:4px; }
+      main { padding-top:15px; }
+      .hero { min-height:340px; padding:30px 22px; border-radius:19px; }
+      .hero h1 { white-space:normal; font-size:clamp(46px,12vw,72px); }
+      .hero-lightning { right:-130px; min-width:300px; opacity:.75; }
+      .hero::before { right:-15px; font-size:175px; }
+      .lead { font-size:14px; }
+      .actions { gap:9px; }
+      .btn { padding:10px 13px; font-size:12px; }
+      .grid { grid-template-columns:1fr; gap:13px; }
+      .card-art { height:118px; }
+      .section-head { margin-top:27px; }
+      .social-grid { grid-template-columns:1fr; }
+      .social-card { flex-wrap:wrap; }
+      .social-card .btn { margin-left:0; }
+      .discord-panel { min-height:210px; padding:24px 20px; }
+      .discord-symbol { display:none; }
+      .discord-lightning { width:75%; right:-130px; opacity:.65; }
+      .footer-line { display:none; }
+      .footer-inner { flex-wrap:wrap; }
+    }
   </style>
 </head>
+
 <body>
-  <div class="container">
-    <h1>V7KXL Sweat Pack 64x</h1>
-    <p>a 64x Resource Pack for Minecraft 1.21.50+</p>
-    <a href="https://www.mediafire.com/file/o9cmapgmcboawvq/v7kxl+64x+for+sweats.mcpack/file">Download V7KXL Sweat Pack 64x</a>
-    <p>Kompatibel with Minecraft Bedrock Edition</p>
-  </div>
+  <header class="topbar">
+    <div class="shell nav">
+      <a class="brand" href="#" data-page="home">TxTMarket</a>
+
+      <button class="menu-toggle" id="menuToggle" aria-label="Menü öffnen">☰</button>
+
+      <nav class="nav-links" id="navLinks">
+        <button class="nav-btn active" data-page="home">Home</button>
+        <button class="nav-btn" data-page="tutorials">Tutorials</button>
+        <button class="nav-btn" data-page="packs">Texture Packs</button>
+        <button class="nav-btn" data-page="socials">Socials</button>
+        <button class="nav-btn" data-page="discord">Discord</button>
+      </nav>
+
+      <!-- GOLDENES TXT-MARKET-LOGO -->
+      <div class="header-emblem">
+        <svg viewBox="0 0 200 200" role="img" aria-label="TxTMarket Logo">
+          <defs>
+            <radialGradient id="orb" cx="35%" cy="25%" r="80%">
+              <stop offset="0" stop-color="#3a2a0b"/>
+              <stop offset=".58" stop-color="#090a0c"/>
+              <stop offset="1" stop-color="#020304"/>
+            </radialGradient>
+            <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+              <stop stop-color="#fff0ad"/>
+              <stop offset=".38" stop-color="#ffd04c"/>
+              <stop offset="1" stop-color="#a96808"/>
+            </linearGradient>
+            <filter id="glow">
+              <feGaussianBlur stdDeviation="3.5" result="b"/>
+              <feMerge>
+                <feMergeNode in="b"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+
+          <circle cx="100" cy="100" r="78" fill="url(#orb)" stroke="url(#gold)" stroke-width="3" filter="url(#glow)"/>
+          <circle cx="100" cy="100" r="68" fill="none" stroke="#eebd43" stroke-opacity=".42"/>
+
+          <g fill="none" stroke="url(#gold)" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)">
+            <path d="M99 3 L88 34 L101 29 L82 70 L111 48 L103 74 L128 42 L119 68 L145 28" stroke-width="3"/>
+            <path d="M10 66 L38 77 L29 90 L61 94 L43 108 L72 113" stroke-width="2.5"/>
+            <path d="M190 124 L160 116 L171 103 L139 99 L157 84 L128 80" stroke-width="2.5"/>
+            <path d="M46 169 L60 143 L72 151 L82 128 L94 151" stroke-width="2.2"/>
+            <path d="M155 166 L142 143 L131 152 L119 130 L109 153" stroke-width="2.2"/>
+            <path d="M31 36 L48 48 L43 57 L66 64" stroke-width="1.7"/>
+            <path d="M169 34 L151 49 L157 59 L135 65" stroke-width="1.7"/>
+          </g>
+
+          <text x="100" y="109" text-anchor="middle" fill="url(#gold)" font-size="23" font-weight="900" font-style="italic" letter-spacing="-1.4">TxTMarket</text>
+          <path d="M55 124 Q100 139 145 124" fill="none" stroke="#f0c14e" stroke-opacity=".5"/>
+        </svg>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell">
+
+    <!-- HOME -->
+    <section class="page active" id="page-home">
+      <div class="hero">
+
+        <svg class="hero-lightning" viewBox="0 0 620 420" aria-hidden="true">
+          <g fill="none" stroke="#f6c04a" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M590 4 L510 58 L534 74 L448 127 L477 143 L376 208 L404 220 L310 299 L336 306 L252 409" stroke-width="5"/>
+            <path d="M500 65 L438 55 L455 83 L386 100 L413 122 L347 153" stroke-width="3"/>
+            <path d="M392 196 L327 176 L340 202 L274 222 L298 244 L229 275" stroke-width="3"/>
+            <path d="M312 288 L251 271 L263 297 L208 319" stroke-width="2.5"/>
+            <path d="M565 30 L550 94 L573 85 L535 149" stroke="#fff1b4" stroke-width="2"/>
+          </g>
+        </svg>
+
+        <div class="hero-content">
+          <div class="eyebrow">Minecraft • Tutorials • Community</div>
+
+          <h1>
+            <span class="txt">TxT</span><span class="market">Market</span>
+          </h1>
+
+          <p class="lead">
+            Unser Place für Tutorials, Texture Packs und Minecraft-Content.<br>
+            Cleanes Design, klare Guides und eine Community.
+          </p>
+
+          <div class="actions">
+            <button class="btn btn-primary" data-page="tutorials">
+              Tutorials entdecken →
+            </button>
+
+            <button class="btn btn-ghost" data-page="packs">
+              Texture Packs ansehen
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-head">
+        <div>
+          <h2>Was gibt’s hier?</h2>
+          <p>Alles an einem Ort — von Guides bis zu unseren Packs.</p>
+        </div>
+      </div>
+
+      <div class="grid">
+        <article class="card">
+          <div class="card-art"><span>GUIDES</span></div>
+          <div class="card-body">
+            <span class="tag">Wissen</span>
+            <h3>Tutorials</h3>
+            <p>Schritt-für-Schritt-Anleitungen zu Minecraft und mehr.</p>
+            <div class="card-bottom">
+              <button class="text-link" data-page="tutorials">Zu den Tutorials ↗</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-art"><span>PACKS</span></div>
+          <div class="card-body">
+            <span class="tag">Downloads</span>
+            <h3>Texture Packs</h3>
+            <p>Unsere ausgewählten und selbst erstellten Texture Packs.</p>
+            <div class="card-bottom">
+              <button class="text-link" data-page="packs">Packs ansehen ↗</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-art"><span>FOLLOW</span></div>
+          <div class="card-body">
+            <span class="tag">Social Media</span>
+            <h3>Unsere Kanäle</h3>
+            <p>Neue Videos, Clips und Updates von uns.</p>
+            <div class="card-bottom">
+              <button class="text-link" data-page="socials">Socials öffnen ↗</button>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- DISCORD -->
+      <div class="discord-panel home-discord">
+        <svg class="discord-lightning" viewBox="0 0 620 320" aria-hidden="true">
+          <g fill="none" stroke="#f2bd40" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M610 4 L535 53 L557 69 L477 115 L498 131 L407 185 L429 198 L337 255 L360 268 L291 320" stroke-width="5"/>
+            <path d="M515 60 L455 49 L467 73 L407 91 L424 111 L364 136" stroke-width="3"/>
+            <path d="M420 183 L360 165 L374 189 L315 208 L332 230 L271 254" stroke-width="2.5"/>
+          </g>
+        </svg>
+
+        <div class="discord-copy">
+          <span class="tag">TxTMarket COMMUNITY</span>
+          <h2>See you on Discord.</h2>
+          <p>Kommt auf unseren Discord-Server, tauscht euch aus und bleibt mit uns und der Community connected.</p>
+          <a class="btn btn-primary" id="discordHomeButton" href="#" target="_blank" rel="noopener noreferrer">
+            ◉ Discord beitreten →
+          </a>
+        </div>
+
+        <div class="discord-symbol">DC</div>
+      </div>
+    </section>
+
+    <!-- TUTORIALS -->
+    <section class="page" id="page-tutorials">
+      <div class="page-intro">
+        <div class="eyebrow">Learn something new</div>
+        <h1 class="page-title">Tutorials<span class="gold-dot">.</span></h1>
+        <p>Die wichtigsten HugoSMP-PvP-Begriffe im Überblick: D-Tap, Triple Tap, Sword PvP und Cave PvP. Die Erklärungen sind kurze Begriffsbeschreibungen; genaue Varianten können je nach Kit oder Server abweichen.</p>
+      </div>
+      <div class="grid" id="tutorialGrid"></div>
+    </section>
+
+    <!-- TEXTURE PACKS -->
+    <section class="page" id="page-packs">
+      <div class="page-intro">
+        <div class="eyebrow">Customize your game</div>
+        <h1 class="page-title">Texture Packs<span class="gold-dot">.</span></h1>
+        <p>Bei TxTMarket findet ihr eine große Auswahl: HugoSMP-Packs, Sub-Packs von Hugo-Creatorn, Vanilla-Packs und Crystal-PvP-Packs – gesammelt an einem Ort.</p>
+      </div>
+      <div class="grid" id="packGrid"></div>
+    </section>
+
+    <!-- SOCIALS -->
+    <section class="page" id="page-socials">
+      <div class="page-intro">
+        <div class="eyebrow">Stay connected</div>
+        <h1 class="page-title">Socials<span class="gold-dot">.</span></h1>
+        <p>Folgt unseren Kanälen und verpasst keine neuen Videos, Clips oder Updates.</p>
+      </div>
+      <div class="social-grid" id="socialGrid"></div>
+    </section>
+
+    <!-- DISCORD -->
+    <section class="page" id="page-discord">
+      <div class="page-intro">
+        <div class="eyebrow">Join the community</div>
+        <h1 class="page-title">Discord<span class="gold-dot">.</span></h1>
+      </div>
+
+      <div class="discord-panel">
+        <svg class="discord-lightning" viewBox="0 0 620 320" aria-hidden="true">
+          <g fill="none" stroke="#f2bd40" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M610 4 L535 53 L557 69 L477 115 L498 131 L407 185 L429 198 L337 255 L360 268 L291 320" stroke-width="5"/>
+            <path d="M515 60 L455 49 L467 73 L407 91 L424 111 L364 136" stroke-width="3"/>
+          </g>
+        </svg>
+
+        <div class="discord-copy">
+          <span class="tag">TxTMarket COMMUNITY</span>
+          <h2>See you on Discord.</h2>
+          <p>Kommt auf unseren Discord-Server, tauscht euch aus und bleibt mit uns und der Community connected.</p>
+          <a class="btn btn-primary" id="discordPageButton" href="#" target="_blank" rel="noopener noreferrer">
+            ◉ Discord beitreten →
+          </a>
+        </div>
+
+        <div class="discord-symbol">DC</div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="shell footer-inner">
+      <span>© <span id="year"></span> TxTMarket</span>
+      <span class="footer-line"></span>
+      <span>Built for the community.</span>
+      <span class="footer-mark">///</span>
+    </div>
+  </footer>
+
+  <script>
+
+    /* =====================================================
+       TxTMarket — HIER EURE LINKS UND INHALTE EINTRAGEN
+       ===================================================== */
+
+    const SITE = {
+
+      // DISCORD-EINLADUNG
+      discord: "https://discord.gg/vZwtKfGxu",
+
+      // TIKTOK UND YOUTUBE
+      socials: [
+        {
+          name: "TikTok",
+          description: "Clips, Highlights & kurze Updates",
+          label: "TikTok öffnen",
+          url: "https://www.tiktok.com/@vrx.cloudxrl",
+          mark: "T"
+        },
+        {
+          name: "YouTube",
+          description: "Videos, Tutorials & mehr",
+          label: "YouTube öffnen",
+          url: "https://www.youtube.com/@txtMarket",
+          mark: "▶"
+        }
+      ],
+
+      // TUTORIALS: Die kurzen Erklärungen erscheinen als einzelne Karten.
+      tutorials: [
+        {
+          title: "D-Tap",
+          category: "Crystal PvP",
+          description: "D-Tap ist ein Begriff aus dem Crystal-PvP für eine kombinierte Treffer-Sequenz. Die genaue Bedeutung und Variante kann je nach Kit oder Server unterschiedlich sein.",
+          url: "https://discord.gg/vZwtKfGxu",
+          linkLabel: "Im Discord ansehen"
+        },
+        {
+          title: "Triple Tap",
+          category: "PvP-Mechanic",
+          description: "Triple Tap bezeichnet eine Folge aus drei Treffern innerhalb einer PvP-Kombo. Die genaue Bedeutung und Variante kann je nach Kit oder Server leicht abweichen.",
+          url: "https://discord.gg/vZwtKfGxu",
+          linkLabel: "Im Discord ansehen"
+        },
+        {
+          title: "Sword PvP",
+          category: "Sword",
+          description: "Sword PvP ist ein Minecraft-PvP-Stil, bei dem das Schwert als Ingame-Gegenstand im Mittelpunkt steht. Der Begriff beschreibt die Spielart und ihre Regeln.",
+          url: "https://discord.gg/vZwtKfGxu",
+          linkLabel: "Im Discord ansehen"
+        },
+        {
+          title: "Cave PvP",
+          category: "HugoSMP",
+          description: "Cave PvP bezeichnet Minecraft-PvP in Höhlen oder unterirdischen Bereichen. Dabei ist die Höhlenumgebung Teil des Spielareals.",
+          url: "https://discord.gg/vZwtKfGxu",
+          linkLabel: "Im Discord ansehen"
+        }
+      ],
+
+      // TEXTURE PACKS
+      packs: [
+        {
+          title: "Unsere Pack-Sammlung",
+          version: "HugoSMP • Creator • Vanilla • Crystal",
+          description: "Bei uns findet ihr HugoSMP-Packs, Sub-Packs von Hugo-Creatorn, Vanilla-Packs und Crystal-PvP-Packs. Wir sammeln verschiedene Styles und Varianten an einem Ort.",
+          url: "https://discord.gg/vZwtKfGxu",
+          linkLabel: "Packs im Discord ansehen"
+        }
+      ]
+
+    };
+
+
+    // AB HIER NICHTS ÄNDERN, WENN IHR NUR LINKS EINTRAGEN WOLLT
+
+    const escapeHTML = value =>
+      String(value).replace(/[&<>"']/g, ch => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      })[ch]);
+
+    function cardTemplate(item, type) {
+      const title = escapeHTML(item.title || "Neuer Eintrag");
+      const description = escapeHTML(item.description || "Beschreibung hier ergänzen.");
+
+      const category = escapeHTML(
+        type === "tutorial"
+          ? (item.category || "Tutorial")
+          : (item.version || "Texture Pack")
+      );
+
+      const url = item.url && item.url !== "#" ? item.url : "";
+
+      const action = url
+        ? `<a class="small-link" href="${escapeHTML(url)}" target="_blank" rel="noopener noreferrer">
+            ${escapeHTML(item.linkLabel || (type === "tutorial" ? "Tutorial öffnen" : "Download öffnen"))} ↗
+          </a>`
+        : `<span class="small-link" style="opacity:.5">Link folgt</span>`;
+
+      return `
+        <article class="card">
+          <div class="card-art">
+            <span>${type === "tutorial" ? "HOW TO" : "PACK"}</span>
+          </div>
+          <div class="card-body">
+            <span class="tag">${category}</span>
+            <h3>${title}</h3>
+            <p>${description}</p>
+            <div class="card-bottom">${action}</div>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderList(targetId, items, type) {
+      const target = document.getElementById(targetId);
+
+      if (!items.length) {
+        target.innerHTML = `
+          <div class="empty-note">
+            Noch keine ${type === "tutorial" ? "Tutorials" : "Texture Packs"} eingetragen.
+            Fügt eure Einträge im Bereich <b>SITE</b> im Script hinzu.
+          </div>
+        `;
+        return;
+      }
+
+      target.innerHTML = items
+        .map(item => cardTemplate(item, type))
+        .join("");
+    }
+
+    function renderSocials() {
+      const target = document.getElementById("socialGrid");
+
+      target.innerHTML = SITE.socials.map(s => {
+        const valid = s.url && !s.url.includes("DEIN-");
+
+        return `
+          <article class="card social-card">
+            <div class="social-icon">${escapeHTML(s.mark || "↗")}</div>
+
+            <div>
+              <h3>${escapeHTML(s.name)}</h3>
+              <p>${escapeHTML(s.description)}</p>
+            </div>
+
+            ${
+              valid
+                ? `<a class="btn btn-ghost"
+                     href="${escapeHTML(s.url)}"
+                     target="_blank"
+                     rel="noopener noreferrer">
+                     ${escapeHTML(s.label)} ↗
+                   </a>`
+                : `<span class="tag">Link eintragen</span>`
+            }
+          </article>
+        `;
+      }).join("");
+    }
+
+
+    // NAVIGATION
+    function showPage(name) {
+
+      document.querySelectorAll(".page").forEach(page => {
+        page.classList.toggle(
+          "active",
+          page.id === `page-${name}`
+        );
+      });
+
+      document.querySelectorAll(".nav-btn").forEach(btn => {
+        btn.classList.toggle(
+          "active",
+          btn.dataset.page === name
+        );
+      });
+
+      document.getElementById("navLinks").classList.remove("open");
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    document.addEventListener("click", event => {
+      const trigger = event.target.closest("[data-page]");
+
+      if (trigger) {
+        event.preventDefault();
+        showPage(trigger.dataset.page);
+      }
+    });
+
+
+    // HANDY-MENÜ
+    document.getElementById("menuToggle").addEventListener("click", () => {
+      document.getElementById("navLinks").classList.toggle("open");
+    });
+
+
+    // DISCORD-LINKS
+    function setDiscordLink(id) {
+      const button = document.getElementById(id);
+      button.href = SITE.discord;
+
+      button.addEventListener("click", event => {
+        if (!SITE.discord || SITE.discord.includes("DEIN-LINK")) {
+          event.preventDefault();
+          alert("Tragt zuerst euren Discord-Einladungslink im SITE-Bereich des Scripts ein.");
+        }
+      });
+    }
+
+    setDiscordLink("discordHomeButton");
+    setDiscordLink("discordPageButton");
+
+
+    // AUTOMATISCHES JAHR UND INHALTE
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
+
+    renderList("tutorialGrid", SITE.tutorials, "tutorial");
+    renderList("packGrid", SITE.packs, "pack");
+    renderSocials();
+
+  </script>
 </body>
 </html>
